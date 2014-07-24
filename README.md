@@ -24,13 +24,13 @@ Add `hubot-cron` to `external-scripts.json`.
 ## Usage
 
 ```
-miyagawa> hubot new job 0 9 * * 1-5 "Good morning everyone!"
+miyagawa> hubot cron new 0 9 * * 1-5 "Good morning everyone!"
 hubot> Job 12345 created
 
-miyagawa> hubot list jobs
+miyagawa> hubot cron list
 hubot> (list of jobs)
 
-miyagawa> hubot rm job 12345
+miyagawa> hubot cron rm 12345
 hubot> Job 12345 removed
 ```
 
