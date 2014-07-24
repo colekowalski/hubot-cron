@@ -2,11 +2,11 @@
 #   register cron jobs to schedule messages on the current channel
 #
 # Commands:
-#   hubot new job "<crontab format>" <message> - Schedule a cron job to say something
-#   hubot new job <crontab format> "<message>" - Same, different quoting
-#   hubot list jobs - List current cron jobs
-#   hubot remove job <id> - remove job
-#   hubot remove job with message <message> - remove with message
+#   hubot cron new "<crontab format>" <message> - Schedule a cron job to say something
+#   hubot cron new <crontab format> "<message>" - Same, different quoting
+#   hubot cron list - List current cron jobs
+#   hubot cron remove <id> - remove job
+#   hubot cron remove with message <message> - remove with message
 #
 # Author:
 #   miyagawa
@@ -52,25 +52,25 @@ module.exports = (robot) ->
     for own id, job of robot.brain.data.cronjob
       registerNewJobFromBrain robot, id, job...
 
-  robot.respond /(?:new|add) job "(.*?)" (.*)$/i, (msg) ->
+  robot.respond /cron (?:new|add) "(.*?)" (.*)$/i, (msg) ->
     handleNewJob robot, msg, msg.match[1], msg.match[2]
 
-  robot.respond /(?:new|add) job (.*) "(.*?)" *$/i, (msg) ->
+  robot.respond /cron (?:new|add) (.*) "(.*?)" *$/i, (msg) ->
     handleNewJob robot, msg, msg.match[1], msg.match[2]
 
-  robot.respond /(?:list|ls) jobs?/i, (msg) ->
+  robot.respond /cron (?:list|ls|jobs)/i, (msg) ->
     for id, job of JOBS
       room = job.user.reply_to || job.user.room
       if room == msg.message.user.reply_to or room == msg.message.user.room
         msg.send "#{id}: #{job.pattern} @#{room} \"#{job.message}\""
 
-  robot.respond /(?:rm|remove|del|delete) job (\d+)/i, (msg) ->
+  robot.respond /cron (?:rm|remove|del|delete) (\d+)/i, (msg) ->
     if (id = msg.match[1]) and unregisterJob(robot, id)
       msg.send "Job #{id} deleted"
     else
       msg.send "Job #{id} does not exist"
 
-  robot.respond /(?:rm|remove|del|delete) job with message (.+)/i, (msg) ->
+  robot.respond /cron (?:rm|remove|del|delete) with message (.+)/i, (msg) ->
     message = msg.match[1]
     for id, job of JOBS
       room = job.user.reply_to || job.user.room
